@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-service
+  labels:
+    app: client-service
+spec:
+  ports:
+    - name: http
+      port: 8080
+  selector:
+    app: client-service
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: client-service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-service
+  labels:
+    app: client-service
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client-service
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: client-service
+        version: v1
+    spec:
+      serviceAccountName: client-service
+      containers:
+        - name: client-service
+          image: <repo>/client-service:<version>
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          securityContext:
+            runAsUser: 1000
+---

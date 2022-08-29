@@ -1,0 +1,6 @@
+grpc:
+  client:
+    grpc-backend-service:
+      address: static://backend-service.apps.svc:9000
+      negotiationType: plaintext
+

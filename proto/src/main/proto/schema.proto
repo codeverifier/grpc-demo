@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+
+package io.solo.fe;
+
+message Car {
+  int32 car_id = 1;
+  string make = 2;
+  string model = 3;
+  float price = 4;
+  int32 year = 5;
+  string color = 6;
+  int32 manufacturer_id = 7;
+}
+
+message Manufacturer {
+  int32 manufacturer_id = 1;
+  string name = 2;
+  string country = 4;
+  int32 car_id = 5;
+}
+
+service CarCatalogService {
+
+  // Client will send one request and server will respond with one response (unary - sync)
+  rpc getManufacturer(Manufacturer) returns(Manufacturer){}
+
+  // Client will send one request and server will send stream of response to the client (sever streaming - async)
+  rpc getCarsByManufacturer(Manufacturer) returns(stream Car){}
+
+  // Client will stream of request and server will respond with one response (client streaming - async)
+  rpc getTheMostExpensiveCar(stream Car) returns(Car){}
+
+  // Client will send stream of request and server will respond with stream of response (bi-directional streaming - async)
+  rpc getCarsByCountry(stream Car) returns (stream Car) {}
+
+  // Client will send one request and server will send stream of response to the client (sever streaming - async)
+  rpc getAllCars(google.protobuf.Empty) returns(stream Car){}
+
+  // Client will send one request and server will send stream of response to the client (sever streaming - async)
+  rpc getAllManufacturers(google.protobuf.Empty) returns(stream Manufacturer){}
+}
